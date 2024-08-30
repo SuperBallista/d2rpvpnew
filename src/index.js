@@ -181,7 +181,7 @@ app.post('/refresh_token', async (req, res) => {
 
       // 새 Access Token 생성
       console.log(user.username);
-      const newAccessToken = jwt.sign({ username: user.username }, secretKey, { expiresIn: '10s' });
+      const newAccessToken = jwt.sign({ username: user.username }, secretKey, { expiresIn: '30m' });
 
       res.status(200).json({ Token: newAccessToken });
     });
@@ -775,7 +775,7 @@ app.post('/process_login',  async (req, res) => {
 
     if (isPasswordValid) {
       // 로그인 성공, JWT 토큰 생성
-      const token = jwt.sign({ username: lowerCaseNickname }, secretKey, { expiresIn: '10s' });
+      const token = jwt.sign({ username: lowerCaseNickname }, secretKey, { expiresIn: '30m' });
       const refreshToken = jwt.sign({ username: lowerCaseNickname }, refreshsecretKey, { expiresIn: '7d' });
 
       res.status(200).json({ token, refreshToken }); // JSON 응답으로 변경
@@ -3509,7 +3509,7 @@ userNickname = decoded.username})}
 
     console.log(userNickname + ' 이메일변경 요청 확인');
 
-    if (!user) {
+    if (!userNickname) {
       return res.status(401).json({ error: '로그인이 필요합니다.' });
     }
 
@@ -3606,6 +3606,130 @@ if (!passwordMatch) {
     res.status(500).json({ error: '서버 오류' });
   }
 });
+
+
+
+
+
+// 계정 삭제 엔드 포인트
+app.delete('/delete_account',  isAuthenticated, async (req, res) => {
+  try {
+    const token = req.header('Authorization')?.split(' ')[1];
+
+    let userNickname
+    if (token) {
+      jwt.verify(token, secretKey, (err, decoded) => {
+          if (err) {
+              return res.sendStatus(403); // Forbidden
+          }
+userNickname = decoded.username})}
+
+
+    console.log(userNickname + ' 계정 삭제 요청 확인');
+
+    if (!userNickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+
+    // 프론트엔드에서 전송한 이메일 및 암호 데이터
+    const { nowpw } = req.body;
+
+// 사용자의 현재 암호 확인
+const connection = await pool.getConnection();
+const result = await connection.query('SELECT pw FROM b_user WHERE Nickname = ?', [userNickname]);
+connection.release();
+
+if (result.length === 0) {
+  console.log('사용자를 찾지 못함');
+  return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+}
+
+const currentPasswordHash = result[0].pw;
+
+// 현재 암호 검증
+const passwordMatch = await bcrypt.compare(nowpw, currentPasswordHash);
+
+if (!passwordMatch) {
+  return res.status(401).json({ error: '현재 암호가 일치하지 않습니다.' });
+}
+
+
+// 계정 삭제하기
+
+const delelte_account = await connection.query('DELETE from b_user WHERE Nickname = ?', [userNickname]);
+
+    if (delelte_account.affectedRows === 1) {
+      res.json({ success: true });
+    } else {
+      res.status(500).json({ error: '계정 삭제에 실패했습니다.' });
+    }
+  } catch (error) {
+    console.error('계정 삭제 오류:', error);
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
+
+// 계정 삭제 엔드 포인트
+app.delete('/delete_account_m',  isAuthenticated, async (req, res) => {
+  try {
+    const token = req.header('Authorization')?.split(' ')[1];
+
+    let userNickname
+    if (token) {
+      jwt.verify(token, secretKey, (err, decoded) => {
+          if (err) {
+              return res.sendStatus(403); // Forbidden
+          }
+userNickname = decoded.username})}
+
+
+    console.log(userNickname + ' 계정 삭제 요청 확인');
+
+    if (!userNickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+
+    // 프론트엔드에서 전송한 이메일 및 암호 데이터
+    const { nowpw } = req.body;
+
+// 사용자의 현재 암호 확인
+const connection = await pool.getConnection();
+const result = await connection.query('SELECT pw FROM m_user WHERE Nickname = ?', [userNickname]);
+connection.release();
+
+if (result.length === 0) {
+  console.log('사용자를 찾지 못함');
+  return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+}
+
+const currentPasswordHash = result[0].pw;
+
+// 현재 암호 검증
+const passwordMatch = await bcrypt.compare(nowpw, currentPasswordHash);
+
+if (!passwordMatch) {
+  return res.status(401).json({ error: '현재 암호가 일치하지 않습니다.' });
+}
+
+
+// 계정 삭제하기
+
+const delelte_account = await connection.query('DELETE from m_user WHERE Nickname = ?', [userNickname]);
+
+    if (delelte_account.affectedRows === 1) {
+      res.json({ success: true });
+    } else {
+      res.status(500).json({ error: '계정 삭제에 실패했습니다.' });
+    }
+  } catch (error) {
+    console.error('계정 삭제 오류:', error);
+    res.status(500).json({ error: '서버 오류' });
+  }
+});
+
+
+
 
 
 
@@ -4199,7 +4323,7 @@ if (category==="all") {
 }
     connection.release();
     res.json(result);
-
+글
   } catch (error) {
     console.error('Error fetching posts:', error);
     res.status(500).send('Internal Server Error');
