@@ -2592,7 +2592,6 @@ userNickname = decoded.username})}
     return res.status(400).json({ message: '권한이 없습니다' });
   }
 
-
   let connection;
   try {
     connection = await pool.getConnection();
@@ -2603,8 +2602,8 @@ userNickname = decoded.username})}
       WHERE Nickname = ?;
     `;
     console.log('updated')
-    await connection.query(updateScoreQuery, [adminscore, player]);
-    console.log('관리자의 점수 직접 부여 :' + player + '에게 ' + adminscore + '점 부여')
+    await connection.query(updateScoreQuery, [adminscore, player + '_m']);
+    console.log('관리자의 점수 직접 부여 :' + player  + '_m 에게 ' + adminscore + '점 부여')
 
     res.status(200).json({ message: 'Lscore update successfully' });
   } catch (error) {
@@ -3367,6 +3366,9 @@ await connection.query(backuptournQuery);
     SET BScore = ? , LScore = 0, Records = 0
   `;
   await connection.query(resetBScoreQuery,[startscore]);
+
+
+
 
   // Delete from b_record
   const deleteBRecordQuery = `
