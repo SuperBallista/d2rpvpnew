@@ -3364,7 +3364,7 @@ await connection.query(backuptournQuery);
   // 점수 초기화
   const resetBScoreQuery = `
     UPDATE b_user
-    SET BScore = ? , LScore = 0
+    SET BScore = ? , LScore = 0, Records = 0
   `;
   await connection.query(resetBScoreQuery,[startscore]);
 
