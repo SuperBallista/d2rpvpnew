@@ -23,7 +23,7 @@ body {
     justify-content: right;
 }
 
-.logined-info_admin, .logined-info_logout, .logined-info_myinfo, .logouted-info_login, .logouted-info_register, .logouted-info_mode, .buttonlink {
+.logined-info_admin, .logined-info_logout, .logined-info_myinfo, .logouted-info_login, .logouted-info_register, .logouted-info_mode {
     display: flex;
     align-items: center;
     border: 2px white solid;
@@ -32,7 +32,7 @@ body {
     margin: 5px;
 }
 
-.buttonlink:hover, .logined-info_admin:hover, .logined-info_logout:hover, .logined-info_myinfo:hover, .logouted-info_login:hover, .logouted-info_register:hover, .logouted-info_mode:hover, .menubutton:hover {
+.logined-info_admin:hover, .logined-info_logout:hover, .logined-info_myinfo:hover, .logouted-info_login:hover, .logouted-info_register:hover, .logouted-info_mode:hover, .menubutton:hover {
     color: yellow;
     border: 2px yellow solid;
 }
