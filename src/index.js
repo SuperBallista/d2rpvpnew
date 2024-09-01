@@ -995,7 +995,7 @@ app.get('/rankdata', async (req, res) => {
 
 
     // b_user 테이블에서 데이터 가져오기
-    const rankdb = await connection.query('SELECT Nickname, BScore, LScore, Class, Lastgame, Records FROM b_user WHERE Nickname != "admin" ORDER BY (BScore + (LScore * 0.2) + if(Records > 15, 15, Records) * ?) DESC', [RecordScore]);
+    const rankdb = await connection.query('SELECT Nickname, BScore, LScore, Class, Lastgame, Records FROM b_user WHERE Nickname != "admin" ORDER BY (BScore + (LScore * 0.3) + if(Records > 15, 15, Records) * ?) DESC', [RecordScore]);
     
 
     // b_record 테이블에서 닉네임이 몇 번 나왔는지 세는 쿼리문
@@ -1047,7 +1047,7 @@ GROUP BY
         row.push(user.Class);
 
         // 4. BScore + LScore + RecordScore
-        const totalScore = Math.round((user.BScore + (user.LScore * 0.2) ) * 100) / 100 + ( (user.Records > 15 ? 15 : user.Records) * RecordScore);
+        const totalScore = Math.round((user.BScore + (user.LScore * 0.3) ) * 100) / 100 + ( (user.Records > 15 ? 15 : user.Records) * RecordScore);
         row.push(totalScore);
 
         // 5. DB의 BScore
