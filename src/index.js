@@ -4219,16 +4219,16 @@ try{
         switch (numberteams) {
           case 2:
             for (const updateValue of updateQueriesCham) {
-                await connection.query(updateLScoreQuery, [teams2ScoreM.Championship, updateValue]);
+                await connection.query(updateLScoreQuery, [teams2ScoreM.Championship, updateValue+'_m']);
             }
             break;
           
 case 4:
   for (const updateValue of updateQueriesCham) {
-      await connection.query(updateLScoreQuery, [teams4ScoreM.Championship, updateValue]);
+      await connection.query(updateLScoreQuery, [teams4ScoreM.Championship, updateValue+'_m']);
     }
     for (const updateValue of updateQueriesRunner) {
-      await connection.query(updateLScoreQuery, [teams4ScoreM.Runner_up, updateValue]);
+      await connection.query(updateLScoreQuery, [teams4ScoreM.Runner_up, updateValue+'_m']);
     }
     
       break;
@@ -4236,15 +4236,15 @@ case 4:
 
 case 8:
 for (const updateValue of updateQueriesCham) {
-  await connection.query(updateLScoreQuery, [teams8ScoreM.Championship, updateValue]);
+  await connection.query(updateLScoreQuery, [teams8ScoreM.Championship, updateValue+'_m']);
 }
 
 for (const updateValue of updateQueriesRunner) {
-  await connection.query(updateLScoreQuery, [teams8ScoreM.Runner_up, updateValue]);
+  await connection.query(updateLScoreQuery, [teams8ScoreM.Runner_up, updateValue+'_m']);
 }
 
 for (const updateValue of updateQueries3rd) {
-  await connection.query(updateLScoreQuery, [teams8ScoreM.Place3rd, updateValue]);
+  await connection.query(updateLScoreQuery, [teams8ScoreM.Place3rd, updateValue+'_m']);
 }
 
 break;
@@ -4252,13 +4252,13 @@ break;
 case 16:
 
   for (const updateValue of updateQueriesCham) {
-    await  connection.query(updateLScoreQuery, [teams16ScoreM.Championship, updateValue]);
+    await  connection.query(updateLScoreQuery, [teams16ScoreM.Championship, updateValue+'_m']);
   }
   for (const updateValue of updateQueriesRunner) {
-    await  connection.query(updateLScoreQuery, [teams16ScoreM.Runner_up, updateValue]);
+    await  connection.query(updateLScoreQuery, [teams16ScoreM.Runner_up, updateValue+'_m']);
   }
     for (const updateValue of updateQueries3rd) {
-    await  connection.query(updateLScoreQuery, [teams16ScoreM.Place3rd, updateValue]);
+    await  connection.query(updateLScoreQuery, [teams16ScoreM.Place3rd, updateValue+'_m']);
   }
   break;}
 
@@ -4878,16 +4878,16 @@ const updateLScoreQuery = `
     switch (numberteams) {
       case 2:
         for (const updateValue of updateQueriesCham) {
-            await connection.query(updateLScoreQuery, [teams2ScoreM.Championship, updateValue]);
+            await connection.query(updateLScoreQuery, [teams2ScoreM.Championship, updateValue+'_m']);
         }
         break;
       
     case 4:
     for (const updateValue of updateQueriesCham) {
-    await connection.query(updateLScoreQuery, [teams4ScoreM.Championship, updateValue]);
+    await connection.query(updateLScoreQuery, [teams4ScoreM.Championship, updateValue+'_m']);
     }
     for (const updateValue of updateQueriesRunner) {
-      await connection.query(updateLScoreQuery, [teams4ScoreM.Runner_up, updateValue]);
+      await connection.query(updateLScoreQuery, [teams4ScoreM.Runner_up, updateValue+'_m']);
       }
   
     break;
@@ -4895,15 +4895,15 @@ const updateLScoreQuery = `
     
     case 8:
     for (const updateValue of updateQueriesCham) {
-    await connection.query(updateLScoreQuery, [teams8ScoreM.Championship, updateValue]);
+    await connection.query(updateLScoreQuery, [teams8ScoreM.Championship, updateValue+'_m']);
     }
     
     for (const updateValue of updateQueriesRunner) {
-    await connection.query(updateLScoreQuery, [teams8ScoreM.Runner_up, updateValue]);
+    await connection.query(updateLScoreQuery, [teams8ScoreM.Runner_up, updateValue+'_m']);
     }
     
     for (const updateValue of updateQueries3rd) {
-    await connection.query(updateLScoreQuery, [teams8ScoreM.Place3rd, updateValue]);
+    await connection.query(updateLScoreQuery, [teams8ScoreM.Place3rd, updateValue+'_m']);
     }
     
     break;
@@ -4911,13 +4911,13 @@ const updateLScoreQuery = `
     case 16:
     
     for (const updateValue of updateQueriesCham) {
-    await  connection.query(updateLScoreQuery, [teams16ScoreM.Championship, updateValue]);
+    await  connection.query(updateLScoreQuery, [teams16ScoreM.Championship, updateValue+'_m']);
     }
     for (const updateValue of updateQueriesRunner) {
-    await  connection.query(updateLScoreQuery, [teams16ScoreM.Runner_up, updateValue]);
+    await  connection.query(updateLScoreQuery, [teams16ScoreM.Runner_up, updateValue+'_m']);
     }
     for (const updateValue of updateQueries3rd) {
-    await  connection.query(updateLScoreQuery, [teams16ScoreM.Place3rd, updateValue]);
+    await  connection.query(updateLScoreQuery, [teams16ScoreM.Place3rd, updateValue+'_m']);
     }
     break;}
 
