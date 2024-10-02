@@ -36,10 +36,10 @@ const getRankDataM = async (req, res) => {
 
     // m_user 테이블에서 데이터 가져오기
     const rankdb = await connection.query(`
-      SELECT Nickname, BScore, LScore, Class, Lastgame 
+      SELECT Nickname, clan, LScore, Lastgame 
       FROM m_user 
       WHERE Nickname != "admin_m" 
-      ORDER BY (BScore + LScore) DESC
+      ORDER BY LScore DESC
     `);
 
     const result = rankService.createResultArray(rankdb, 0, 0, true);

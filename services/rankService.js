@@ -40,7 +40,8 @@ const member = {
     BScore: totalBScore,
     wins: wins,
     loses: losses,
-    rank: i+1
+    rank: i+1,
+    clan: rankdb[i].clan
   }
 
 result.push(member)

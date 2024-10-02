@@ -83,6 +83,16 @@ const updateUserScore = async (tableName, player, adminScore) => {
     }
 
 
+    if (userTable === 'm_user')
+    {await connection.query(`UPDATE m_clan SET Score = 0`)
+    await connection.query(`DELETE FROM m_clanrecord`)
+    await connection.query(`DELETE FROM m_clanrecordtemp`)
+
+    }
+
+
+
+
 
       // 기록 및 임시 테이블 초기화
       const deleteRecordQuery = `DELETE FROM ${recordTable};`;

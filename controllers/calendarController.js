@@ -1,5 +1,4 @@
 const eventService = require('../services/calendarService');
-const { isAuthenticated } = require('../middlewares/authMiddleware'); // 미들웨어 불러오기
 
 // 이벤트 텍스트 불러오기
 const getEventText = async (req, res) => {

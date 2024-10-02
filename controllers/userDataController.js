@@ -5,7 +5,7 @@ const getUserData = async (req, res) => {
   try {
     const userNickname = req.user.username; // 미들웨어에서 인증된 사용자 정보 사용
 
-    const userData = await userDataService.getUserData(userNickname, 'b_user', 'b_record');
+    const userData = await userDataService.getUserData(userNickname, 'b_user');
     if (!userData) {
       return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
     }
@@ -22,7 +22,7 @@ const getUserDataM = async (req, res) => {
   try {
     const userNickname = req.user.username; // 미들웨어에서 인증된 사용자 정보 사용
 
-    const userData = await userDataService.getUserData(userNickname, 'm_user', 'm_record');
+    const userData = await userDataService.getUserData(userNickname, 'm_user');
     if (!userData) {
       return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
     }

@@ -14,7 +14,7 @@ const verifyToken = (token) => {
 };
 
 // 사용자 정보 및 전적 조회 로직
-const getUserData = async (userNickname, userTable, recordTable) => {
+const getUserData = async (userNickname, userTable) => {
   const connection = await pool.getConnection();
   try {
     // 사용자 정보 쿼리
@@ -25,12 +25,16 @@ const getUserData = async (userNickname, userTable, recordTable) => {
       return null;
     }
 
+
+if (userTable==="b_user") {
+
+
     // 사용자 전적 쿼리
     const recordQuery = `
       SELECT
         COUNT(*) AS countwin,
-        (SELECT COUNT(*) FROM ${recordTable} WHERE Loser = ? OR lose2 = ? OR lose3 = ? OR lose4 = ?) AS countlose
-      FROM ${recordTable}
+        (SELECT COUNT(*) FROM b_record WHERE Loser = ? OR lose2 = ? OR lose3 = ? OR lose4 = ?) AS countlose
+      FROM b_record
       WHERE Winner = ? OR win2 = ? OR win3 = ? OR win4 = ?
     `;
     const recordResult = await connection.query(recordQuery, [
@@ -42,17 +46,46 @@ const getUserData = async (userNickname, userTable, recordTable) => {
     return {
       nickname: userNickname,
       email: userResult[0].email,
-      tscore: (userResult[0].BScore + userResult[0].LScore).toString(),
+      rscore: userResult[0].RScore.toString(),
       bscore: userResult[0].BScore.toString(),
       lscore: userResult[0].LScore.toString(),
-      lastdate: new Date(userResult[0].Lastgame).toLocaleDateString('en-US', {
-        year: 'numeric', month: '2-digit', day: '2-digit'
-      }),
-      weapon: userResult[0].Class,
       countwin: recordResult[0].countwin.toString(),
       countlose: recordResult[0].countlose.toString(),
       countrecord: (recordResult[0].countwin + recordResult[0].countlose).toString(),
     };
+
+  } else {
+
+    const clanDataQuery = `
+      SELECT
+        COUNT(*) AS clanwin,
+        (SELECT COUNT(*) FROM m_clanrecord WHERE loser = ?) AS clanlose
+      FROM m_clanrecord
+      WHERE winner = ?
+    `
+    const clanDataDrawQuery = `
+    Select count(*) AS clandraw
+    From m_clanrecord Where draw1 = ? or draw2 = ?`
+
+    const clanDataResult = await connection.query(clanDataQuery, [userNickname, userNickname])
+    const clanDataDrawResult = await connection.query(clanDataDrawQuery,[userNickname, userNickname])
+
+    return {
+      nickname: userNickname,
+      email: userResult[0].email,
+      lscore: userResult[0].LScore.toString(),
+      clan: userResult[0].clan,
+      clanwin: clanDataResult[0].clanwin.toString(),
+      clanlose: clanDataResult[0].clanlose.toString(),
+      clandraw: clanDataDrawResult[0].clandraw.toString()
+    };
+
+
+
+
+
+  }
+
   } catch (error) {
     console.error('사용자 정보 및 전적 조회 오류:', error);
     throw error;

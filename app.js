@@ -19,6 +19,7 @@ const boardRoutes = require('./routes/boardRoutes');
 const calendarRoutes = require('./routes/calendarRoutes');
 const oldRecordRoutes = require('./routes/oldRecordRoutes');
 const calculateRoutes = require('./routes/calculateRoutes');
+const clanRoutes = require('./routes/clanRoutes');
 const cookieParser = require('cookie-parser');
 
 
@@ -46,6 +47,7 @@ app.use('/', boardRoutes);
 app.use('/', calendarRoutes);
 app.use('/', oldRecordRoutes);
 app.use('/', calculateRoutes);
+app.use('/',clanRoutes);
 
 
 app.post("/logout", (req, res) => {
@@ -61,8 +63,6 @@ app.post("/logout", (req, res) => {
   });
   res.status(200).send("로그아웃 성공");
 });
-
-
 
 
 
