@@ -14,7 +14,7 @@ const fetchEventText = async (yearmonth, tableSuffix = '') => {
 };
 
 // 이벤트 텍스트 기록하기 (일반, m_user 구분)
-const saveEventText = async ({ yearmonth, yearmonthdate, date, text }, tableSuffix = '') => {
+const saveEventText = async ({ yearmonth, yearmonthdate, date, text }, tableSuffix) => {
   const connection = await pool.getConnection();
   try {
     await connection.query(`DELETE FROM ${tableSuffix}calendar WHERE yearmonthdate = ?`, [yearmonthdate]);

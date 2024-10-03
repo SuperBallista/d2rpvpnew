@@ -19,7 +19,7 @@ const getEventText = async (req, res) => {
       const { year, month, day, event, isM } = req.body;
       const yearmonth = String(year) + String(month).padStart(2, '0');
       const yearmonthdate = yearmonth + String(day).padStart(2, '0');
-      const isMBoolean = isM === 'true';
+      const isMBoolean = req.body.mode;
       const tableSuffix = isMBoolean ? 'm_' : 'b_'; // 'm_user' 테이블이면 'm_' 접미사 추가
   
       await eventService.saveEventText({ yearmonth, yearmonthdate, date: day, text: event }, tableSuffix);
