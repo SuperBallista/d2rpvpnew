@@ -168,7 +168,8 @@ const clanRecordService = async () => {
               gameDate: new Intl.DateTimeFormat('en-US', {
                 year: 'numeric',
                 month: '2-digit',
-                day: '2-digit'
+                day: '2-digit',
+                timeZone: 'Asia/Seoul'  // 한국 시간으로 변환
               }).format(new Date(record.gameDate)),
               result: '',
             };
