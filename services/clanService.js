@@ -151,7 +151,8 @@ const clanRecordService = async () => {
               gameDate: new Intl.DateTimeFormat('en-US', {
                 year: 'numeric',
                 month: '2-digit',
-                day: '2-digit'
+                day: '2-digit',
+                timeZone: 'Asia/Seoul'  // 한국 시간으로 변환
               }).format(new Date(record.gameDate)),
               result: '무', // result에 '무' 추가
               winner: record.draw1, // draw1 값을 winner로
@@ -337,6 +338,7 @@ const clanRecordAcceptService = async (OrderNumber, result) => {
   const findClanQuery = `Select clan from m_user where Nickname = ?`
   const AddScoreQuery = `UPDATE m_clan SET Score = Score + ? Where Name = ?`
   const writeRecordQuery = `INSERT Into m_clanrecord (winner, loser, draw1, draw2, gameDate) values (?, ?, ?, ?, ?)`
+  const deleteTempQuery = `DELETE from m_clanrecordtemp where OrderNum = ?`
 
   try {
     await connection.beginTransaction();
@@ -352,13 +354,13 @@ await connection.query(AddScoreQuery,[1,draw2Clan.clan])
 await connection.query(writeRecordQuery,[TempRecord.winner,TempRecord.loser,TempRecord.draw1,TempRecord.draw2,TempRecord.gameDate])
 }
 else
-
 {
   const [winnerClan] = await connection.query(findClanQuery,[TempRecord.winner])
   await connection.query(AddScoreQuery,[3,winnerClan.clan])
   await connection.query(writeRecordQuery,[TempRecord.winner,TempRecord.loser,TempRecord.draw1,TempRecord.draw2,TempRecord.gameDate])
   }
 
+await connection.query(deleteTempQuery,[OrderNumber])
 await connection.commit()
 
   return "ok"
