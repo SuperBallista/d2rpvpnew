@@ -4,7 +4,7 @@ const express = require('express');
 
 const configureServer = (app) => {
   // 정적 파일 제공
-  app.use(express.static(path.join(__dirname, '../src/public')));
+  app.use(express.static(path.join(__dirname, '../public')));
 
   // bodyParser 설정
   app.use(bodyParser.json({ limit: '10mb' }));

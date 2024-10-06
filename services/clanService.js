@@ -372,10 +372,37 @@ catch (error) {
 } finally {
   connection.release();
 }
-
-
 }
 
+const clanRemoveService = async (clan) => {
+  const connection = await pool.getConnection();
+const deleteClanQuery = `DELETE from m_clan where Name = ?`
+try {
+  await connection.query(deleteClanQuery,[clan])
+  return "ok"
+}
+catch (error) {
+  console.error('Error removing clan:', error);
+  throw error;
+} finally {
+  connection.release();
+}
+}
+
+const clanCreateService = async(clan) =>{
+  const connection = await pool.getConnection();
+  const CreateClanQuery = `INSERT INTO m_clan (Name) values (?)`
+  try {
+    await connection.query(CreateClanQuery,[clan])
+    return "ok"
+  }
+  catch (error) {
+    console.error('Error creating clan:', error);
+    throw error;
+  } finally {
+    connection.release();
+  }
+}
 
 module.exports = {
     clanJoinService,
@@ -388,5 +415,7 @@ module.exports = {
     clanRecordSubmitService,
     clanNoApprovedRecordsService,
     clanRecordCancelService,
-    clanRecordAcceptService
+    clanRecordAcceptService,
+    clanRemoveService,
+    clanCreateService
   };

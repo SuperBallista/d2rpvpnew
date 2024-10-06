@@ -69,7 +69,7 @@ app.post("/logout", (req, res) => {
 
 // 정적 파일 서빙
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'src/public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // 서버 시작

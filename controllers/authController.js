@@ -35,14 +35,7 @@ const processLogin = async (req, res) => {
       const token = jwtService.createAccessToken(lowerCaseNickname);
       const refreshToken = jwtService.createRefreshToken(lowerCaseNickname);
 
-      // JWT 및 Refresh Token을 HttpOnly 쿠키로 설정
-      res.cookie('d2rpvpjwtToken', token, {
-        httpOnly: true,
-        secure: process.env.HTTPS,     // HTTPS에서만 전송
-        sameSite: 'strict',
-        maxAge: 3600000,  // 1시간
-      });
-
+     
       res.cookie('d2rpvprefreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.HTTPS,
@@ -51,6 +44,8 @@ const processLogin = async (req, res) => {
       });
 
       // 필요하다면 추가적인 사용자 정보를 응답으로 보냄
+      res.setHeader('Access-Control-Expose-Headers', 'd2rpvpjwtToken');
+      res.setHeader('d2rpvpjwtToken', token);
       return res.status(200).json({ username: lowerCaseNickname });
     } else {
       return res.status(401).send('Password is Uncorrected');
@@ -88,14 +83,6 @@ const processLoginM = async (req, res) => {
       const token = jwtService.createAccessToken(lowerCaseNickname);
       const refreshToken = jwtService.createRefreshToken(lowerCaseNickname);
 
-      // JWT 및 Refresh Token을 HttpOnly 쿠키로 설정
-      res.cookie('d2rpvpjwtToken', token, {
-        httpOnly: true,
-        secure: process.env.HTTPS,     // HTTPS에서만 전송
-        sameSite: 'strict',
-        maxAge: 3600000,  // 1시간
-      });
-
       res.cookie('d2rpvprefreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.HTTPS,     // HTTPS에서만 전송
@@ -104,6 +91,8 @@ const processLoginM = async (req, res) => {
       });
 
       // 필요하다면 추가적인 사용자 정보를 응답으로 보냄
+      res.setHeader('Access-Control-Expose-Headers', 'd2rpvpjwtToken');
+      res.setHeader('d2rpvpjwtToken', token);
       return res.status(200).json({ username: lowerCaseNickname });
     } else {
       return res.status(401).send('Password is Uncorrected');

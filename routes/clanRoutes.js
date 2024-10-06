@@ -28,4 +28,8 @@ router.post(`/delete-clan-record`, isAuthenticated, clanController.clanRecordCan
 
 router.post(`/approve-clan-record`, isAuthenticated, clanController.clanRecordAccept)
 
+router.delete(`/admin_clan_delete`, isAuthenticated, clanController.clanRemove)
+
+router.post(`/admin_clan_create`, isAuthenticated, clanController.clanCreate)
+
 module.exports = router;

@@ -5,9 +5,9 @@ const tokenExpiryTime = '1h'; // 액세스 토큰 만료 시간
 
 exports.isAuthenticated = (req, res, next) => {
   // 쿠키에서 액세스 토큰과 리프레시 토큰 추출
-  const token = req.cookies.d2rpvpjwtToken;
-  const refreshToken = req.cookies.d2rpvprefreshToken;
-
+  const token = req.headers['d2rpvpjwttoken'] 
+   const refreshToken = req.cookies.d2rpvprefreshToken;
+  
   // 엑세스 토큰이 없을 때 리프레시 토큰 확인
   if (!token) {
     if (!refreshToken) {
@@ -23,14 +23,8 @@ exports.isAuthenticated = (req, res, next) => {
       // 리프레시 토큰이 유효하다면 새로운 엑세스 토큰 발급
       const newAccessToken = jwt.sign({ username: refreshUser.username }, secretKey, { expiresIn: tokenExpiryTime });
 
-      // 새로운 액세스 토큰을 쿠키에 저장
-      res.cookie('d2rpvpjwtToken', newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // HTTPS에서만 전송 (환경 설정 확인)
-        sameSite: 'strict',
-        maxAge: 3600000, // 1시간
-      });
-
+      // 새로운 액세스 토큰을 헤더에 저장
+      res.setHeader('d2rpvpjwttoken', newAccessToken);
       req.user = refreshUser; // 리프레시 토큰에서 유저 정보 가져오기
       return next();
     });
@@ -52,14 +46,9 @@ exports.isAuthenticated = (req, res, next) => {
           // 리프레시 토큰이 유효하다면 새로운 액세스 토큰 발급
           const newAccessToken = jwt.sign({ username: refreshUser.username }, secretKey, { expiresIn: tokenExpiryTime });
 
-          // 새로운 액세스 토큰을 쿠키에 저장
-          res.cookie('d2rpvpjwtToken', newAccessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // HTTPS에서만 전송 (환경 설정 확인)
-            sameSite: 'strict',
-            maxAge: 3600000, // 1시간
-          });
-
+      // 새로운 액세스 토큰을 헤더에 저장
+      res.setHeader('Access-Control-Expose-Headers', 'd2rpvpjwttoken');
+      res.setHeader('d2rpvpjwttoken', newAccessToken);
           req.user = refreshUser; // 리프레시 토큰에서 유저 정보 가져오기
           next();
         });

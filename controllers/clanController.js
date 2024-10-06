@@ -227,9 +227,42 @@ if (result==='ok')
         console.error('승인 실패:', error);
         res.status(500).json({ error: '서버 오류' });
     }
+}
+
+const clanRemove = async (req, res) => {
+const clan = req.body.clan
+try {
+const result = await clanService.clanRemoveService(clan)
+
+if (result==='ok')
+    {  console.log(clan, "클랜 삭제 완료")
+          res.status(200).json(result);}
+
+    }   catch (error) {
+        console.error('클랜 삭제 실패:', error);
+        res.status(500).json({ error: '서버 오류' });
+    }
+}
+
+const clanCreate = async (req, res) => {
+const clan = req.body.clan
+try{
+const result = await clanService.clanCreateService(clan)
+if (result==='ok')
+    {  console.log(clan, "클랜 생성 완료")
+          res.status(200).json(result);}
+
+    }   catch (error) {
+        console.error('클랜 생성 실패:', error);
+        res.status(500).json({ error: '서버 오류' });
+    }
 
 
 }
+
+
+
+
 
   module.exports = {
 clanJoin,
@@ -242,5 +275,7 @@ clanRecordDelete,
 clanRecordSubmit,
 clanNoApprovedRecords,
 clanRecordCancel,
-clanRecordAccept
+clanRecordAccept,
+clanRemove,
+clanCreate
   };

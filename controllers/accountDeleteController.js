@@ -9,11 +9,6 @@ const deleteAccount = async (req, res) => {
     const result = await accountDeleteService.deleteAccount(userNickname, nowpw, 'b_user');
     if (result.success) {
       // 계정 삭제 성공 시 쿠키 삭제
-      res.clearCookie("d2rpvpjwtToken", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-      });
       res.clearCookie("d2rpvprefreshToken", {
         httpOnly: true,
         secure: true,
@@ -39,11 +34,6 @@ const deleteAccountM = async (req, res) => {
     const result = await accountDeleteService.deleteAccount(userNickname, nowpw, 'm_user');
     if (result.success) {
       // 계정 삭제 성공 시 쿠키 삭제
-      res.clearCookie("d2rpvpjwtToken", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-      });
       res.clearCookie("d2rpvprefreshToken", {
         httpOnly: true,
         secure: true,
