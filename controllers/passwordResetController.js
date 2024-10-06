@@ -7,6 +7,7 @@ const processEmailPw = async (req, res) => {
 
     const result = await passwordResetService.resetPassword(findpw_nickname, findpw_email, 'b_user');
     if (result.success) {
+      console.log(findpw_nickname, "임시 비밀번호 요청")
       res.json({ success: true });
     } else {
       res.status(result.status).json({ error: result.error });
@@ -25,6 +26,7 @@ const processEmailPwM = async (req, res) => {
 
     const result = await passwordResetService.resetPassword(findpw_nickname, findpw_email, 'm_user');
     if (result.success) {
+      console.log(findpw_nickname, "임시 비밀번호 요청")
       res.json({ success: true });
     } else {
       res.status(result.status).json({ error: result.error });

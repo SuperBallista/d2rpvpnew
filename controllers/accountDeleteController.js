@@ -19,6 +19,7 @@ const deleteAccount = async (req, res) => {
         secure: true,
         sameSite: "strict",
       });
+      console.log(req.user.username, "계정 삭제 성공")
       res.json({ success: true });
     } else {
       res.status(result.status).json({ error: result.error });
@@ -48,6 +49,7 @@ const deleteAccountM = async (req, res) => {
         secure: true,
         sameSite: "strict",
       });
+      console.log(req.user.username, "계정 삭제 성공")
       res.json({ success: true });
     } else {
       res.status(result.status).json({ error: result.error });

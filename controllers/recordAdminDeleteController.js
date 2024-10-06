@@ -11,6 +11,7 @@ const deleteRecord = async (req, res) => {
 
     const { OrderNum } = req.body;
     await recordDeleteService.deleteRecord(OrderNum, 'b_record', 'b_user');
+    console.log(OrderNum, '랭킹전 기록 삭제')
     res.status(200).json({ message: 'Row deleted successfully' });
   } catch (error) {
     console.error('Error deleting record:', error);

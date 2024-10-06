@@ -37,8 +37,10 @@ const writePost = async (req, res) => {
 
     if (postId !== 'none') {
       await boardService.modifyPost({ title, category, content: safetycontent, postId, nickname });
+      console.log(title,'글 수정 완료');
     } else {
       await boardService.createPost({ title, category, content: safetycontent, nickname });
+      console.log(title,'글 작성 완료');
     }
     res.status(200).json({ message: 'Post successfully' });
   } catch (error) {
@@ -65,6 +67,7 @@ const deletePost = async (req, res) => {
   try {
     const nickname = req.user.username; // 미들웨어에서 인증된 사용자 정보 사용
     await boardService.deletePost(postId, nickname); // 삭제 시 작성자 확인 추가 가능
+    console.log(postId, '번째 글 삭제 완료')
     res.status(200).json({ message: 'Delete Success' });
   } catch (error) {
     console.error('Error deleting post:', error);
@@ -78,6 +81,7 @@ const addComment = async (req, res) => {
   try {
     const nickname = req.user.username; // 미들웨어에서 인증된 사용자 정보 사용
     await boardService.addComment({ postId, nickname, content });
+    console.log(postId,content,"댓글 작성 완료")
     res.status(200).json({ message: 'Add Comment Success' });
   } catch (error) {
     console.error('Error adding comment:', error);
@@ -91,6 +95,7 @@ const deleteComment = async (req, res) => {
   try {
     const nickname = req.user.username; // 미들웨어에서 인증된 사용자 정보 사용
     await boardService.deleteComment(commentId, nickname); // 삭제 시 작성자 확인 추가 가능
+    console.log(commentId,"댓글 삭제 완료")
     res.status(200).json({ message: 'Comment deleted successfully' });
   } catch (error) {
     console.error('Error deleting comment:', error);

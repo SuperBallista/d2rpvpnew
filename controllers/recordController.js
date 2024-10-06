@@ -44,7 +44,7 @@ const approveRecord = async (req, res) => {
   try {
     const result = await recordService.approveRecord(orderNum);
     res.status(200).json({ message: 'Record approved and moved to b_record successfully' });
-    console.log('Record approved and moved to b_record successfully');
+    console.log(orderNum,'미승인 랭킹전 기록 승인');
   } catch (error) {
     console.error('Error approving and moving record in database:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -60,6 +60,7 @@ const deleteRecord = async (req, res) => {
   }
 
   try {
+    console.log(orderNum,"미승인 랭킹전 기록 삭제")
     const result = await recordService.deleteRecord(orderNum);
     res.status(200).json({ message: 'Record deleted successfully' });
   } catch (error) {

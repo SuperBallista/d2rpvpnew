@@ -4,7 +4,6 @@ const jwtService = require('../services/jwtService');  // JWT 관련 서비스 �
 
 const moment = require('moment');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const createConnectionPool = require('../utils/dbConnection');  // DB 연결 풀 가져오기
 const pool = createConnectionPool();  // MariaDB 풀 생성
 const { startscore, startscore_b } = require('../utils/scoreUtils');  // 점수 유틸리티 임포트

@@ -16,13 +16,14 @@ const getEventText = async (req, res) => {
   // 이벤트 텍스트 기록하기
   const changeEventText = async (req, res) => {
     try {
-      const { year, month, day, event, isM } = req.body;
+      const { year, month, day, event } = req.body;
       const yearmonth = String(year) + String(month).padStart(2, '0');
       const yearmonthdate = yearmonth + String(day).padStart(2, '0');
       const isMBoolean = req.body.mode;
       const tableSuffix = isMBoolean ? 'm_' : 'b_'; // 'm_user' 테이블이면 'm_' 접미사 추가
   
       await eventService.saveEventText({ yearmonth, yearmonthdate, date: day, text: event }, tableSuffix);
+      console.log(yearmonthdate, event, '이벤트 작성완료')
       res.status(200).json({ message: '달력 이벤트 기록 성공' });
     } catch (error) {
       console.error('이벤트 기록 실패:', error);

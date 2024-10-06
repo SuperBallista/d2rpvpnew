@@ -5,6 +5,7 @@ const submitEvent = async (req, res) => {
   try {
     const eventdata = req.body;
     const result = await eventService.submitEvent(eventdata, 'b_eventrecord');
+    console.log(eventdata,"바바 토너먼트 기록 제출 완료")
     res.status(200).json({ message: 'Send Tournament Record to Server Success' });
   } catch (error) {
     console.error('Error adding record:', error);
@@ -17,6 +18,7 @@ const submitEventM = async (req, res) => {
   try {
     const eventdata = req.body;
     const result = await eventService.submitEvent(eventdata, 'm_eventrecord');
+    console.log(eventdata,"밀리 토너먼트 기록 제출 완료")
     res.status(200).json({ message: 'Send Tournament Record to Server Success' });
   } catch (error) {
     console.error('Error adding record:', error);
@@ -62,6 +64,7 @@ const getEventHistory = async (req, res) => {
       }
   
       await eventService.deleteEvent('b_eventrecord', eventname);
+      console.log(eventname, "바바 토너먼트 삭제")
       res.status(200).json({ message: 'Tournament Record deleted successfully' });
     } catch (error) {
       console.error('Error deleting event:', error);
@@ -84,6 +87,7 @@ const getEventHistory = async (req, res) => {
       }
   
       await eventService.deleteEvent('m_eventrecord', eventname);
+      console.log(eventname, "밀리 토너먼트 삭제")
       res.status(200).json({ message: 'Tournament Record deleted successfully' });
     } catch (error) {
       console.error('Error deleting event:', error);
@@ -96,6 +100,7 @@ const getEventHistory = async (req, res) => {
     try {
       const eventdata = req.body;
       await eventService.acceptEvent(eventdata,'b_user', 'teamsB');
+      console.log(eventdata, "바바 토너먼트 승인")
       res.status(200).json({ message: 'Accept successfully' });
     } catch (error) {
       console.error('Error accepting event:', error);
@@ -108,6 +113,7 @@ const getEventHistory = async (req, res) => {
     try {
       const eventdata = req.body;
       await eventService.acceptEvent(eventdata, 'm_user', 'teamsM');
+      console.log(eventdata, "밀리 토너먼트 승인")
       res.status(200).json({ message: 'Accept successfully' });
     } catch (error) {
       console.error('Error accepting event:', error);
@@ -141,6 +147,7 @@ const cancelAcceptedEvent = async (req, res) => {
         Place3rd4,
         Eventhost
       });
+      console.log(eventname, "바바 토너먼트 삭제 및 점수 취소")
       res.status(200).json({ message: '승인된 토너먼트 기록을 삭제하고 점수를 원래대로 변경하였습니다.' });
     } catch (error) {
       console.error('Error updating record in database:', error);
@@ -172,6 +179,7 @@ const cancelAcceptedEvent = async (req, res) => {
         Place3rd3,
         Place3rd4
       });
+      console.log(eventname, "밀리 토너먼트 삭제 및 점수 취소")
       res.status(200).json({ message: '승인된 토너먼트 기록을 삭제하고 점수를 원래대로 변경하였습니다.' });
     } catch (error) {
       console.error('Error updating record in database:', error);

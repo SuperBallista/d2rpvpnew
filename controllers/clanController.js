@@ -48,6 +48,7 @@ const clanReset = async (req, res) => {
             const result = await clanService.clanResetService(req.body.player+"_m");
 
             if (result==='ok'){
+                console.log(userNickname, "클랜 리셋 완료")
                 res.status(200).json();
             } else {
                 res.status(400).json({error: 'DB 오류'});
@@ -68,6 +69,7 @@ const adminClanScore = async (req, res) =>{
 const result = await clanService.adminClanScoreService(req.body.clan, req.body.clanScore);
 
 if (result==='ok'){
+    console.log(req.body.clan, req.body.clanScore, "클랜 점수 부여 완료")
     res.status(200).json();
 } else {
     res.status(400).json({error: 'DB 오류'});
@@ -137,8 +139,9 @@ const clanRecordDelete = async (req, res) =>{
 
         const result = await clanService.clanRecordDelteService(req.body.OrderNumber);
     
+        console.log(req.body.OrderNumber, "클랜전 삭제 완료")
         res.status(200).json(result);
-        }
+                }
         else {
             res.status(403).json({error: '권한이 없습니다'})
         }
@@ -158,7 +161,8 @@ const clanRecordSubmit = async (req, res) => {
         const result = await clanService.clanRecordSubmitService(userNickname, req.body.winner, req.body.result)
 
         if (result==='ok')
-    {    res.status(200).json(result);}
+    {   console.log(userNickname, req.body.winner, req.body.result, "클랜전 기록 완료")
+         res.status(200).json(result);}
         else if (result==='no clan error') {
 
             res.status(406).json('자신 또는 상대의 소속 클랜이 없거나 잘못되었습니다');
@@ -177,7 +181,7 @@ const clanNoApprovedRecords = async (req, res) => {
         const result = await clanService.clanNoApprovedRecordsService(userNickname)
         
         if (result)
-            {    res.status(200).json(result);}
+            {                     res.status(200).json(result);}
 else {
 
     res.status(404).json('Bad Request')
@@ -198,7 +202,8 @@ const clanRecordCancel = async (req, res) => {
 
 
         if (result==='ok')
-            {    res.status(200).json(result);}
+            { console.log(orderNum, "클랜기록 취소 완료")
+                   res.status(200).json(result);}
         
             }   catch (error) {
                 console.error('삭제 실패:', error);
@@ -215,7 +220,8 @@ try {
 const result = await clanService.clanRecordAcceptService(orderNum, draw)
 
 if (result==='ok')
-    {    res.status(200).json(result);}
+    {  console.log(orderNum, "클랜전 기록 승인 완료")
+          res.status(200).json(result);}
 
     }   catch (error) {
         console.error('승인 실패:', error);

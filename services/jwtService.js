@@ -4,7 +4,7 @@ const refreshSecretKey = process.env.JWT_REFRESH;
 
 // 액세스 토큰 생성
 exports.createAccessToken = (username) => {
-  return jwt.sign({ username }, secretKey, { expiresIn: '30m' });
+  return jwt.sign({ username }, secretKey, { expiresIn: '1h' });
 };
 
 // 리프레시 토큰 생성

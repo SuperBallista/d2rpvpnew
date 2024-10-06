@@ -8,6 +8,7 @@ const changePassword = async (req, res) => {
 
     const result = await passwordService.changePassword(userNickname, nowpw, newpw, 'b_user');
     if (result.success) {
+      console.log(userNickname,"암호 변경 성공")
       res.json({ success: true });
     } else {
       res.status(result.status).json({ error: result.error });
@@ -26,6 +27,7 @@ const changePasswordM = async (req, res) => {
 
     const result = await passwordService.changePassword(userNickname, nowpw, newpw, 'm_user');
     if (result.success) {
+      console.log(userNickname,"암호 변경 성공")
       res.json({ success: true });
     } else {
       res.status(result.status).json({ error: result.error });
