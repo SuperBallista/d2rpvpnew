@@ -17,6 +17,10 @@ body {
     text-align: center;
 }
 
+.fontBasic{
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
 
 .logined-info, .logouted-info {
     display: flex;
