@@ -1,18 +1,6 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const createConnectionPool = require('../utils/dbConnection');
 const pool = createConnectionPool();
-const secretKey = process.env.JWT_SECRET;  // 환경 변수에서 비밀 키 가져오기
-
-// JWT 토큰 검증
-const verifyToken = (token) => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secretKey, (err, decoded) => {
-      if (err) return reject(err);
-      resolve(decoded.username);
-    });
-  });
-};
 
 // 암호 변경 처리 로직
 const changePassword = async (userNickname, nowpw, newpw, tableName) => {
@@ -55,6 +43,5 @@ const changePassword = async (userNickname, nowpw, newpw, tableName) => {
 };
 
 module.exports = {
-  verifyToken,
   changePassword,
 };

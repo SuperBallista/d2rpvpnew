@@ -1,17 +1,6 @@
-const jwt = require('jsonwebtoken');
 const createConnectionPool = require('../utils/dbConnection');
 const pool = createConnectionPool();
-const secretKey = process.env.JWT_SECRET; // 비밀 키
 
-// JWT 토큰 검증
-const verifyToken = (token) => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secretKey, (err, decoded) => {
-      if (err) return reject(err);
-      resolve(decoded.username);
-    });
-  });
-};
 
 // 사용자 정보 및 전적 조회 로직
 const getUserData = async (userNickname, userTable) => {
@@ -70,6 +59,12 @@ if (userTable==="b_user") {
     const clanDataResult = await connection.query(clanDataQuery, [userNickname, userNickname])
     const clanDataDrawResult = await connection.query(clanDataDrawQuery,[userNickname, userNickname])
 
+    const challengeDate = new Date(userResult[0].ChallengeDate);
+const formattedDate = new Date(challengeDate.getTime() + 9 * 60 * 60 * 1000)  // 9시간을 더해 KST로 변환
+  .toISOString()
+  .slice(0, 10); // YYYY-MM-DD 형식으로 변환
+
+
     return {
       nickname: userNickname,
       email: userResult[0].email,
@@ -77,7 +72,9 @@ if (userTable==="b_user") {
       clan: userResult[0].clan,
       clanwin: clanDataResult[0].clanwin.toString(),
       clanlose: clanDataResult[0].clanlose.toString(),
-      clandraw: clanDataDrawResult[0].clandraw.toString()
+      clandraw: clanDataDrawResult[0].clandraw.toString(),
+      Challenge: userResult[0].Challenge,
+      ChallengeDate: formattedDate,
     };
 
 
@@ -95,6 +92,5 @@ if (userTable==="b_user") {
 };
 
 module.exports = {
-  verifyToken,
   getUserData,
 };

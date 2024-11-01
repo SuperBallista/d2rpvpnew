@@ -1,5 +1,5 @@
 const startscore = 1200;  // 기본 점수 설정
-const startscore_b = 0;   // m_user 기본 점수 설정
+const startscore_b = 800;   // m_user 기본 점수 설정
 const RecordScore = 20;  // 기록 점수 상수
 
 

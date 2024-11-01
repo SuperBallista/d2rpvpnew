@@ -1,5 +1,5 @@
 const jwtService = require('../services/jwtService');  // JWT 관련 서비스 파일을 불러옴
-
+const crypto = require('crypto');
 
 
 const moment = require('moment');
@@ -10,11 +10,86 @@ const { startscore, startscore_b } = require('../utils/scoreUtils');  // 점수 
 
 
 
-// 일반 로그인 처리 함수
+
+const processNicknameCheck = async (req, res) => {
+
+
+  const invalidCharRegex = /[0-9_\s]/;
+  function validateInput(input) {
+    return invalidCharRegex.test(input); // 금지된 문자가 포함되어 있으면 true 반환
+  }
+  if (validateInput(req.body.nickname)) {
+    return res.status(400).json({ error: "입력값에는 숫자, 밑줄(_), 띄어쓰기를 사용할 수 없습니다." });
+  }
+
+
+  const connection = await pool.getConnection();
+
+
+ try{
+  const [result] = await connection.query(`SELECT Nickname from b_user WHERE Nickname = ?`, [req.body.nickname])
+
+  if (result) {
+return res.status(403).send("중복")
+  } else {
+    return res.status(200).send("사용가능")
+ }
+}
+catch (error) {
+  return res.status(500).send(`Server Error`)
+}
+
+finally {
+  connection.release();
+}
+
+
+};
+
+
+
+const processNicknameCheckM = async (req, res) => {
+
+
+  const invalidCharRegex = /[0-9_\s]/;
+  function validateInput(input) {
+    return invalidCharRegex.test(input); // 금지된 문자가 포함되어 있으면 true 반환
+  }
+  if (validateInput(req.body.nickname)) {
+    return res.status(400).json({ error: "입력값에는 숫자, 밑줄(_), 띄어쓰기를 사용할 수 없습니다." });
+  }
+
+  const connection = await pool.getConnection();
+
+
+ try{
+  const [result] = await connection.query(`SELECT Nickname from m_user WHERE Nickname = ?`, [req.body.nickname+'_m'])
+
+  if (result) {
+return res.status(403).send("중복")
+  } else {
+    return res.status(200).send("사용가능")
+ }
+}
+catch (error) {
+  return res.status(500).send(`Server Error`)
+
+}
+
+finally {
+  connection.release();
+}
+};
+
+
+// CSRF 토큰 생성 함수
+const createCsrfToken = () => {
+  return crypto.randomBytes(24).toString('hex');
+};
+
+// 일반 로그인 처리 함수 (CSRF 토큰 쿠키로 저장)
 const processLogin = async (req, res) => {
   const { nickname, password } = req.body;
-
-  // DB 연결 가져오기
   const connection = await pool.getConnection();
 
   try {
@@ -35,17 +110,30 @@ const processLogin = async (req, res) => {
       const token = jwtService.createAccessToken(lowerCaseNickname);
       const refreshToken = jwtService.createRefreshToken(lowerCaseNickname);
 
-     
+      // CSRF 토큰 생성
+      const csrfToken = createCsrfToken();
+
+      // Refresh Token을 httpOnly 쿠키에 저장
       res.cookie('d2rpvprefreshToken', refreshToken, {
         httpOnly: true,
-        secure: process.env.HTTPS,
+        secure: process.env.HTTPS === 'true', // HTTPS 환경에서만 사용
         sameSite: 'strict',
         maxAge: 604800000,  // 7일
       });
 
-      // 필요하다면 추가적인 사용자 정보를 응답으로 보냄
+      // CSRF 토큰을 클라이언트의 쿠키에 저장 (httpOnly는 사용하지 않음)
+      res.cookie('csrfToken', csrfToken, {
+        httpOnly: false, // CSRF 토큰은 클라이언트 측에서 접근 가능해야 함
+        secure: process.env.HTTPS === 'true', // HTTPS에서만 사용
+        sameSite: 'strict',
+        maxAge: 3600000,  // 1시간
+      });
+
+      // JWT 토큰을 노출 가능한 헤더에 저장
       res.setHeader('Access-Control-Expose-Headers', 'd2rpvpjwtToken');
-      res.setHeader('d2rpvpjwtToken', token);
+      res.setHeader('d2rpvpjwttoken', token);
+
+      // 응답으로 사용자 정보 전송 (CSRF 토큰은 이미 쿠키에 저장됨)
       return res.status(200).json({ username: lowerCaseNickname });
     } else {
       return res.status(401).send('Password is Uncorrected');
@@ -58,12 +146,9 @@ const processLogin = async (req, res) => {
   }
 };
 
-
-
-// m_user 로그인 처리 함수
+// m_user 로그인 처리 함수 (CSRF 토큰 쿠키로 저장)
 const processLoginM = async (req, res) => {
   const { nickname, password } = req.body;
-
   const connection = await pool.getConnection();
 
   try {
@@ -83,17 +168,35 @@ const processLoginM = async (req, res) => {
       const token = jwtService.createAccessToken(lowerCaseNickname);
       const refreshToken = jwtService.createRefreshToken(lowerCaseNickname);
 
+      // CSRF 토큰 생성
+      const csrfToken = createCsrfToken();
+
+      // Refresh Token을 httpOnly 쿠키에 저장
       res.cookie('d2rpvprefreshToken', refreshToken, {
         httpOnly: true,
-        secure: process.env.HTTPS,     // HTTPS에서만 전송
+        secure: process.env.HTTPS, // HTTPS에서만 사용
         sameSite: 'strict',
         maxAge: 604800000,  // 7일
       });
 
-      // 필요하다면 추가적인 사용자 정보를 응답으로 보냄
+      // CSRF 토큰을 클라이언트의 쿠키에 저장 (httpOnly는 사용하지 않음)
+      res.cookie('csrfToken', csrfToken, {
+        httpOnly: false, // CSRF 토큰은 클라이언트 측에서 접근 가능해야 함
+        secure: process.env.HTTPS === 'true', // HTTPS에서만 사용
+        sameSite: 'strict',
+        maxAge: 3600000,  // 1시간
+      });
+
+      // JWT 토큰을 노출 가능한 헤더에 저장
       res.setHeader('Access-Control-Expose-Headers', 'd2rpvpjwtToken');
-      res.setHeader('d2rpvpjwtToken', token);
+      res.setHeader('d2rpvpjwttoken', token);
+
+      // 응답으로 사용자 정보 전송 (CSRF 토큰은 이미 쿠키에 저장됨)
       return res.status(200).json({ username: lowerCaseNickname });
+
+
+      
+
     } else {
       return res.status(401).send('Password is Uncorrected');
     }
@@ -109,6 +212,15 @@ const processLoginM = async (req, res) => {
 // 일반 회원가입 처리 함수
 const processRegi = async (req, res) => {
   const { nickname, password, email, wgrade } = req.body;
+
+  const invalidCharRegex = /[0-9_\s]/;
+  function validateInput(input) {
+    return invalidCharRegex.test(input); // 금지된 문자가 포함되어 있으면 true 반환
+  }
+  if (validateInput(nickname)) {
+    return res.status(400).json({ error: "입력값에는 숫자, 밑줄(_), 띄어쓰기를 사용할 수 없습니다." });
+  }
+
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -138,6 +250,15 @@ const processRegi = async (req, res) => {
 const processRegiM = async (req, res) => {
   const { nickname, password, email, wgrade } = req.body;
 
+  const invalidCharRegex = /[0-9_\s]/;
+  function validateInput(input) {
+    return invalidCharRegex.test(input); // 금지된 문자가 포함되어 있으면 true 반환
+  }
+  if (validateInput(nickname)) {
+    return res.status(400).json({ error: "입력값에는 숫자, 밑줄(_), 띄어쓰기를 사용할 수 없습니다." });
+  }
+
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const currentDate = moment().utcOffset('+0900').format('YYYY-MM-DD HH:mm:ss');
@@ -166,6 +287,18 @@ const processRegiM = async (req, res) => {
 const checkJwt = async (req, res) => {
   try {
     res.set('Cache-Control', 'no-cache'); // 캐시를 사용하지 않도록 설정
+
+      // CSRF 토큰 생성
+      const csrfToken = createCsrfToken();
+
+      // CSRF 토큰을 클라이언트의 쿠키에 저장 (httpOnly는 사용하지 않음)
+      res.cookie('csrfToken', csrfToken, {
+        httpOnly: false, // CSRF 토큰은 클라이언트 측에서 접근 가능해야 함
+        secure: process.env.HTTPS, // HTTPS에서만 사용
+        sameSite: 'strict',
+        maxAge: 3600000,  // 1시간
+      });
+
     if (!req.user) {
       return res.status(403).json({ authenticated: false });
     }
@@ -188,6 +321,8 @@ module.exports = {
   processLoginM,
   processRegi,
   processRegiM,
-  checkJwt
+  checkJwt,
+  processNicknameCheck,
+  processNicknameCheckM
 };
 

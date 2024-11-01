@@ -1,18 +1,6 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const createConnectionPool = require('../utils/dbConnection');
 const pool = createConnectionPool();
-const secretKey = process.env.JWT_SECRET; // 비밀 키
-
-// JWT 토큰 검증
-const verifyToken = (token) => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secretKey, (err, decoded) => {
-      if (err) return reject(err);
-      resolve(decoded.username);
-    });
-  });
-};
 
 // 계정 삭제 로직
 const deleteAccount = async (userNickname, nowpw, tableName) => {
@@ -51,6 +39,5 @@ const deleteAccount = async (userNickname, nowpw, tableName) => {
 };
 
 module.exports = {
-  verifyToken,
   deleteAccount,
 };

@@ -10,6 +10,12 @@ router.post('/process_login', authController.processLogin);
 // m_user 로그인 엔드포인트
 router.post('/process_login_m', authController.processLoginM);
 
+
+
+router.post(`/check_nickname`, authController.processNicknameCheck);
+router.post(`/check_nickname_m`, authController.processNicknameCheckM);
+
+
 // 일반 회원가입 엔드포인트
 router.post('/process_regi', authController.processRegi);
 
@@ -28,6 +34,7 @@ router.post('/process_changeemail', isAuthenticated, (req, res) => {
   router.post('/process_changeemail_m', isAuthenticated, (req, res) => {
     processChangeEmail(req, res, 'm_user');
   });
+
 
 
 module.exports = router;

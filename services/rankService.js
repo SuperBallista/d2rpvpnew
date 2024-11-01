@@ -28,7 +28,7 @@ const createResultArray = (rankdb, recordWin, recordLose, mode) => {
 const result = []
 for (let i = 0; i < rankdb.length; i++){
 
-  const totalBScore = mode? 0 : Math.round(rankdb[i].BScore * 100) / 100 + ((rankdb[i].Records > 15 ? 15 : rankdb[i].Records) * RecordScore);
+  const totalBScore = mode? Math.round(rankdb[i].BScore * 100) / 100 + ((rankdb[i].Records > 20 ? 20 : rankdb[i].Records) * RecordScore) : Math.round(rankdb[i].BScore * 100) / 100 + ((rankdb[i].Records > 15 ? 15 : rankdb[i].Records) * RecordScore);
   
   const wins = recordWin===0 ? 0 : Number(recordWin.find(record => record.Nickname === rankdb[i].Nickname)?.TotalWins) || 0;
   const losses = recordLose===0 ? 0 : Number(recordLose.find(record => record.Nickname === rankdb[i].Nickname)?.TotalLoses) || 0;
@@ -40,8 +40,9 @@ const member = {
     BScore: totalBScore,
     wins: wins,
     loses: losses,
-    rank: i+1,
-    clan: rankdb[i].clan
+    clan: rankdb[i].clan,
+    Elo: rankdb[i].BScore,
+    TScore: totalBScore + (rankdb[i].LScore * 0.4)
   }
 
 result.push(member)

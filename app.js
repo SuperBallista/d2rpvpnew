@@ -1,11 +1,16 @@
+const express = require('express');
+const configureServer = require('./config/serverConfig');
+const app = express();
+
+// 서버 설정 (configureServer)
+configureServer(app);
+
+
 // 환경변수 설정 (한 번만 설정)
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
-const express = require('express');
 const path = require('path');  // 추가된 부분
 const authRoutes = require('./routes/authRoutes');
 const rankRoutes = require('./routes/rankRoutes');
-const configureServer = require('./config/serverConfig');
 const nicknameRoutes = require('./routes/nicknameRoutes'); 
 const recordRoutes = require('./routes/recordRoutes');
 const passwordRoutes = require('./routes/passwordRoutes');
@@ -20,15 +25,13 @@ const calendarRoutes = require('./routes/calendarRoutes');
 const oldRecordRoutes = require('./routes/oldRecordRoutes');
 const calculateRoutes = require('./routes/calculateRoutes');
 const clanRoutes = require('./routes/clanRoutes');
-const cookieParser = require('cookie-parser');
 
+const csrf = require('csurf');
 
-const app = express();
+// CSRF 미들웨어 설정 (쿠키에 저장)
+const csrfProtection = csrf({ cookie: true });
+app.use(csrfProtection);  // CSRF 보호 미들웨어 추가
 
-
-// 서버 설정 (configureServer)
-configureServer(app);
-app.use(cookieParser());
 
 // 각종 라우트 설정
 app.use(express.json());
@@ -51,19 +54,13 @@ app.use('/',clanRoutes);
 
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("d2rpvpjwtToken", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-  });
   res.clearCookie("d2rpvprefreshToken", {
     httpOnly: true,
-    secure: true,
+    secure: process.env.HTTPS,
     sameSite: "strict",
   });
   res.status(200).send("로그아웃 성공");
 });
-
 
 
 

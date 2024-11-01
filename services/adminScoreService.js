@@ -1,17 +1,5 @@
-const jwt = require('jsonwebtoken');
 const createConnectionPool = require('../utils/dbConnection');
 const pool = createConnectionPool();
-const secretKey = process.env.JWT_SECRET; // 비밀 키
-
-// JWT 토큰 검증
-const verifyToken = (token) => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secretKey, (err, decoded) => {
-      if (err) return reject(err);
-      resolve(decoded.username);
-    });
-  });
-};
 
 // 사용자 점수 업데이트
 const updateUserScore = async (tableName, player, adminScore) => {
@@ -66,21 +54,10 @@ const updateUserScore = async (tableName, player, adminScore) => {
       // 사용자 점수 초기화
       const resetScoreQuery = `
         UPDATE ${userTable}
-        SET BScore = ?, LScore = 0, Records = 0;
+        SET BScore = ?, LScore = 0, Records = 0, RScore = 0;
       `;
-      const resetScoreQueryM = `
-      UPDATE ${userTable}
-      SET BScore = ?, LScore = 0;
-    `;
 
-
-      if (userTable === 'b_user') {
       await connection.query(resetScoreQuery, [score]);
-    }
-    else {
-      await connection.query(resetScoreQueryM, [score]);
-
-    }
 
 
     if (userTable === 'm_user')
@@ -116,7 +93,6 @@ const updateUserScore = async (tableName, player, adminScore) => {
   
 
 module.exports = {
-  verifyToken,
   updateUserScore,
   resetRank,
 };

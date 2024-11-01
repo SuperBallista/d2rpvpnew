@@ -1,20 +1,8 @@
-const jwt = require('jsonwebtoken');
 const createConnectionPool = require('../utils/dbConnection');
 const pool = createConnectionPool();
-const secretKey = process.env.JWT_SECRET;
-
-// JWT 토큰 검증
-const verifyToken = (token) => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secretKey, (err, decoded) => {
-      if (err) return reject(err);
-      resolve(decoded.username);
-    });
-  });
-};
 
 // 승인된 기록 삭제 및 점수 수정 로직
-const deleteRecord = async (OrderNum) => {
+const deleteRecord = async (OrderNum, RecordTable, UserTable) => {
   const connection = await pool.getConnection();
   await connection.beginTransaction();
 
@@ -22,7 +10,7 @@ const deleteRecord = async (OrderNum) => {
     // 기록 가져오기
     const selectRecordQuery = `
       SELECT Winner, Win2, Win3, Win4, Loser, Lose2, Lose3, Lose4, AddScore, LScore
-      FROM b_record
+      FROM ${RecordTable}
       WHERE OrderNum = ?;
     `;
     const recordRow = await connection.query(selectRecordQuery, [OrderNum]);
@@ -37,12 +25,12 @@ const deleteRecord = async (OrderNum) => {
 
     // 점수 업데이트 쿼리
     const updateScoreQuery = `
-      UPDATE b_user
+      UPDATE ${UserTable}
       SET BScore = BScore - ?
       WHERE Nickname IN (?, ?, ?, ?);
     `;
     const updateRecordsQuery = `
-    UPDATE b_user
+    UPDATE ${UserTable}
     SET Records = Records - 1
     WHERE Nickname IN (?, ?, ?, ?)`;
     
@@ -62,7 +50,7 @@ const deleteRecord = async (OrderNum) => {
 
     // 기록 삭제
     const deleteRecordQuery = `
-      DELETE FROM b_record
+      DELETE FROM ${RecordTable}
       WHERE OrderNum = ?;
     `;
     await connection.query(deleteRecordQuery, [OrderNum]);
@@ -78,6 +66,5 @@ const deleteRecord = async (OrderNum) => {
 };
 
 module.exports = {
-  verifyToken,
   deleteRecord,
 };
