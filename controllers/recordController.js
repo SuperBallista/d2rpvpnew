@@ -29,12 +29,16 @@ const challengelose = async (req, res) => {
 const challengewin = async (req, res) => {
 
   const tableName = req.body.mode ? "m" : "b";
+
   try {
+    const connection = await pool.getConnection();
     const RemoveChallengaQuery = `UPDATE ${tableName}_user SET Challenge = NULL, ChallengeDate = NULL WHERE Nickname = ?`
     await connection.query(RemoveChallengaQuery, [req.body.challenger]);
 
     res.status(200).json({ message: '기록이 완료되었습니다!' });
     console.log("도전 승인 완료", req.body.challenger, req.user.username, "경기 결과를 기록해야 합니다");
+    connection.release(); // 연결 반환
+
   } catch (error) {
     console.error('Error approving and moving record in database:', error);
     res.status(500).json({ error: 'Internal Server Error' });
