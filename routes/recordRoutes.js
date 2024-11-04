@@ -25,7 +25,7 @@ router.get('/no_approved_record_m', isAuthenticated, recordController.getPending
 // 도전자의 승리 기록 승인
 router.post('/challengelose', isAuthenticated, recordController.challengelose);
 // 도전자의 패배 기록 보내기
-router.post('/challengewin', isAuthenticated, recordController.challengelose);
+router.post('/challengewin', isAuthenticated, recordController.challengewin);
 
 
 module.exports = router;
