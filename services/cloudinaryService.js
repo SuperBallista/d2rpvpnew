@@ -1,5 +1,8 @@
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('../config/cloudinary');
 
-exports.uploadImage = (imagePath) => {
-  return cloudinary.uploader.upload(imagePath);
+exports.uploadImage = async (base64Image) => {
+  return await cloudinary.uploader.upload(base64Image, {
+    folder: 'uploads',
+    resource_type: 'image',
+  });
 };

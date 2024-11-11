@@ -25,6 +25,7 @@ const calendarRoutes = require('./routes/calendarRoutes');
 const oldRecordRoutes = require('./routes/oldRecordRoutes');
 const calculateRoutes = require('./routes/calculateRoutes');
 const clanRoutes = require('./routes/clanRoutes');
+const cloudinaryRoute = require('./routes/cloudinaryRoute');
 
 const csrf = require('csurf');
 
@@ -51,7 +52,7 @@ app.use('/', calendarRoutes);
 app.use('/', oldRecordRoutes);
 app.use('/', calculateRoutes);
 app.use('/',clanRoutes);
-
+app.use('/', cloudinaryRoute);
 
 app.post("/logout", (req, res) => {
   res.clearCookie("d2rpvprefreshToken", {
