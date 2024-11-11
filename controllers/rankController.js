@@ -46,7 +46,7 @@ const getRankDataM = async (req, res) => {
       connection.query(rankService.getLoseCountQuery('m_record', 'm_user'))
     ]);
 
-    const result = rankService.createResultArray(rankdb, recordWin, recordLose, false);
+    const result = rankService.createResultArray(rankdb, recordWin, recordLose, true);
     connection.release();
 
     res.json(result);
