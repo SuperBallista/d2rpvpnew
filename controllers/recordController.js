@@ -55,6 +55,10 @@ const submitRecord = async (req, res) => {
 const tableName = req.body.mode ? "m_temp" : "b_temp";
   
   try {
+    if (!req.body.winner) {
+  return res.status(400).json({ error: 'Invalid Data' });
+}
+
     const userNickname = req.user.username; // 미들웨어에서 인증된 사용자 정보 사용
 
     const currentDate = moment().utcOffset('+0900').format('YYYY-MM-DD HH:mm:ss');
